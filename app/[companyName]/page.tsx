@@ -90,7 +90,7 @@ export default function Chat() {
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-muted-foreground">
-              Não foi possível encontrar um chat configurado para a empresa "{companyName}".
+              Não foi possível encontrar um chat configurado para a empresa &quot;{companyName}&quot;.
             </p>
             <Badge variant="outline" className="text-xs">
               {companyName}

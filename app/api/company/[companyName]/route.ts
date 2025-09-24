@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma';
 // GET - Buscar informações do chat da empresa
 export async function GET(
   request: NextRequest,
-  { params }: { params: { companyName: string } }
+  { params }: { params: Promise<{ companyName: string }> }
 ) {
   try {
-    const { companyName } = params;
+    const { companyName } = await params;
     
     if (!companyName) {
       return NextResponse.json(
