@@ -218,7 +218,7 @@ export default function AdminPage() {
               <p className="text-gray-500">Nenhum chat criado ainda.</p>
             ) : (
               <ul className="divide-y divide-gray-200">
-                {chats.map((chat) => (
+                {chats && chats.length > 0 && chats?.map((chat) => (
                   <li key={chat.id} className="py-4">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
