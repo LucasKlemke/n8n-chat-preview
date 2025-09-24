@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowUp, Loader2, Phone, Video, MoreVertical, ArrowLeft, CheckCheck } from 'lucide-react';
-import Link from 'next/link';
+import { ArrowUp, Loader2, CheckCheck } from 'lucide-react';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ChatInfo {
   id: string;
@@ -149,7 +149,7 @@ export default function Chat() {
                       if (part.type === 'text') {
                         return (
                           <div key={`${message.id}-${i}`} className="whitespace-pre-wrap text-sm leading-relaxed">
-                            {part.text}
+                            <Markdown remarkPlugins={[remarkGfm]}>{part.text}</Markdown>
                           </div>
                         );
                       }
