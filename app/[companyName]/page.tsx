@@ -94,8 +94,8 @@ export default function Chat() {
 
   return (
     <div className="h-screen flex flex-col bg-[#e5ddd5]">
-      {/* WhatsApp-style Header */}
-      <div className="flex-shrink-0 bg-[#075e54] px-4 py-3 shadow-md">
+      {/* WhatsApp-style Header - Fixed */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-[#075e54] px-4 py-3 shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
@@ -122,7 +122,7 @@ export default function Chat() {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto bg-[#e5ddd5] px-4 py-4 space-y-2">
+      <div className="flex-1 overflow-y-auto bg-[#e5ddd5] px-4 py-4 space-y-2 pt-20">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center space-y-4 max-w-md mx-auto">
