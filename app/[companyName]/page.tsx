@@ -93,36 +93,36 @@ export default function Chat() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[#e5ddd5]">
+    <div className="h-screen max-h-screen flex flex-col bg-[#e5ddd5] overflow-hidden">
       {/* WhatsApp-style Header - Fixed */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-[#075e54] px-4 py-3 shadow-md">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-[#075e54] px-4 py-2 md:py-3 shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
-                {chatInfo?.companyName?.charAt(0).toUpperCase()}
-
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
+                <span className="text-sm md:text-base font-medium text-gray-600">
+                  {chatInfo?.companyName?.charAt(0).toUpperCase()}
+                </span>
             </div>
             <div className="flex-1">
-              <h1 className="text-lg font-medium text-white">
+              <h1 className="text-base md:text-lg font-medium text-white">
                 {chatInfo?.companyName}
               </h1>
               {status === 'submitted' ? (
-                <p className="text-sm text-gray-200">
+                <p className="text-xs md:text-sm text-gray-200">
                   digitando...
                 </p>
               ) : (
-                <p className="text-sm text-gray-200">
+                <p className="text-xs md:text-sm text-gray-200">
                   Online
                 </p>
               )}
             </div>
           </div>
-
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto bg-[#e5ddd5] px-4 py-4 space-y-2 pt-20">
+      <div className="flex-1 overflow-y-auto bg-[#e5ddd5] px-3 md:px-4 py-2 md:py-4 space-y-2 pt-16 md:pt-20 pb-16 md:pb-20">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center space-y-4 max-w-md mx-auto">
@@ -190,7 +190,7 @@ export default function Chat() {
       </div>
 
       {/* Input Form - Fixed at bottom */}
-      <div className="flex-shrink-0 bg-[#f0f0f0] px-4 py-2 border-t border-gray-200">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#f0f0f0] px-3 md:px-4 py-2 border-t border-gray-200 safe-area-inset-bottom">
         <form
           onSubmit={e => {
             e.preventDefault();
@@ -207,7 +207,7 @@ export default function Chat() {
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder="Digite sua mensagem..."
-              className="w-full rounded-full bg-white border border-gray-300 px-4 py-2 text-sm placeholder:text-gray-500 focus-visible:ring-0 focus-visible:border-[#075e54] min-h-[40px] max-h-[120px] resize-none"
+              className="w-full rounded-full bg-white border border-gray-300 px-3 md:px-4 py-2 text-sm placeholder:text-gray-500 focus-visible:ring-0 focus-visible:border-[#075e54] min-h-[36px] md:min-h-[40px] max-h-[120px] resize-none"
               disabled={false}
             />
           </div>
@@ -215,9 +215,9 @@ export default function Chat() {
             type="submit"
             disabled={!input.trim()}
             size="icon"
-            className="rounded-full w-10 h-10 bg-[#075e54] hover:bg-[#075e54]/90 disabled:bg-gray-300 disabled:text-gray-500 shadow-sm flex-shrink-0"
+            className="rounded-full w-9 h-9 md:w-10 md:h-10 bg-[#075e54] hover:bg-[#075e54]/90 disabled:bg-gray-300 disabled:text-gray-500 shadow-sm flex-shrink-0"
           >
-            <ArrowUp className="w-5 h-5 text-white"/>
+            <ArrowUp className="w-4 h-4 md:w-5 md:h-5 text-white"/>
           </Button>
         </form>
       </div>
