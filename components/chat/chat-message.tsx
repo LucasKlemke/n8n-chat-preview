@@ -2,8 +2,7 @@
 
 import { UIMessage } from 'ai';
 import { CheckCheck } from 'lucide-react';
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { Markdown } from '../markdown';
 
 interface ChatMessageProps {
   message: UIMessage;
@@ -25,8 +24,8 @@ export function ChatMessage({ message }: ChatMessageProps) {
              {message.parts.map((part, i) => {
                       if (part.type === 'text') {
                         return (
-                          <div key={`${message.id}-${i}`} className="whitespace-pre-wrap text-sm leading-relaxed">
-                            <Markdown remarkPlugins={[remarkGfm]}>{part.text}</Markdown>
+                          <div key={`${message.id}-${i}`} className=" text-sm ">
+                            <Markdown>{part.text}</Markdown>
                           </div>
                         );
                       }
