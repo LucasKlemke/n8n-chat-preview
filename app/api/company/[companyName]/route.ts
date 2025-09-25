@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { ChatService } from '@/lib/services/chat.service';
 
 // GET - Buscar informações do chat da empresa
 export async function GET(
@@ -17,12 +17,7 @@ export async function GET(
     }
     
     const decodedCompanyName = decodeURIComponent(companyName);
-    
-    const chat = await prisma.chat.findFirst({
-      where: {
-        companyName: decodedCompanyName
-      }
-    });
+    const chat = await ChatService.getChatByCompanyName(decodedCompanyName);
     
     if (!chat) {
       return NextResponse.json(

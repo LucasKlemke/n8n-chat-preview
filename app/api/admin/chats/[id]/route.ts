@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { ChatService } from '@/lib/services/chat.service';
+import { UpdateChatRequest } from '@/lib/types';
 
 // DELETE - Excluir um chat específico
 export async function DELETE(
@@ -16,26 +17,18 @@ export async function DELETE(
       );
     }
     
-    // Verificar se o chat existe
-    const existingChat = await prisma.chat.findUnique({
-      where: { id }
-    });
+    await ChatService.deleteChat(id);
+    return NextResponse.json({ message: 'Chat excluído com sucesso' });
+  } catch (error) {
+    console.error('Erro ao excluir chat:', error);
     
-    if (!existingChat) {
+    if (error instanceof Error && error.message === 'Chat not found') {
       return NextResponse.json(
         { error: 'Chat não encontrado' },
         { status: 404 }
       );
     }
     
-    // Excluir o chat (as mensagens são excluídas automaticamente por causa do onDelete: Cascade)
-    await prisma.chat.delete({
-      where: { id }
-    });
-    
-    return NextResponse.json({ message: 'Chat excluído com sucesso' });
-  } catch (error) {
-    console.error('Erro ao excluir chat:', error);
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
@@ -50,7 +43,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const { companyName, prompt } = await request.json();
+    const body: UpdateChatRequest = await request.json();
     
     if (!id) {
       return NextResponse.json(
@@ -59,36 +52,25 @@ export async function PUT(
       );
     }
     
-    if (!companyName || !prompt) {
+    if (!body.companyName || !body.prompt) {
       return NextResponse.json(
         { error: 'Nome da empresa e prompt são obrigatórios' },
         { status: 400 }
       );
     }
     
-    // Verificar se o chat existe
-    const existingChat = await prisma.chat.findUnique({
-      where: { id }
-    });
+    const updatedChat = await ChatService.updateChat(id, body);
+    return NextResponse.json(updatedChat);
+  } catch (error) {
+    console.error('Erro ao atualizar chat:', error);
     
-    if (!existingChat) {
+    if (error instanceof Error && error.message === 'Chat not found') {
       return NextResponse.json(
         { error: 'Chat não encontrado' },
         { status: 404 }
       );
     }
     
-    const updatedChat = await prisma.chat.update({
-      where: { id },
-      data: {
-        companyName,
-        prompt
-      }
-    });
-    
-    return NextResponse.json(updatedChat);
-  } catch (error) {
-    console.error('Erro ao atualizar chat:', error);
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }
