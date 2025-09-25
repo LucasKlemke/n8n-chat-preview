@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React, { memo, useMemo, useState } from 'react'
+import React, { memo,} from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -35,7 +35,7 @@ const components: Partial<Components> = {
   },
   a: ({ node, children, ...props }) => {
     return (
-      // @ts-expect-error
+        // @ts-expect-error next-line
       <Link
         className="text-blue-500 hover:underline"
         target="_blank"
