@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useCreateChat } from '@/lib/hooks/use-chats';
 import { ChatFormData } from '@/lib/types';
+import { Textarea } from '../ui/textarea';
 
 export function CreateChatForm() {
   const [formData, setFormData] = useState<ChatFormData>({
@@ -56,13 +57,13 @@ export function CreateChatForm() {
             <Label htmlFor="prompt" className="text-sm font-medium">
               Prompt Personalizado
             </Label>
-            <textarea
+            <Textarea
               id="prompt"
               value={formData.prompt}
               onChange={(e) => setFormData({ ...formData, prompt: e.target.value })}
               required
-              rows={3}
-              className="w-full border border-input rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-0 focus-visible:border-[#075e54] resize-none min-h-[80px] sm:min-h-[100px]"
+              className="h-96"
+              
               placeholder="Digite o prompt personalizado para esta empresa..."
               disabled={isLoading}
             />
