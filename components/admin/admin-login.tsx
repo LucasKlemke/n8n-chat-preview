@@ -16,6 +16,9 @@ export function AdminLogin({ onLogin, isLoading = false }: AdminLoginProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Salva a autenticação no session storage
+    sessionStorage.setItem('adminAuthenticated', 'true');
+    sessionStorage.setItem('adminCode', adminCode);
     onLogin(adminCode);
   };
 

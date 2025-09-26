@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AdminLogin } from '@/components/admin/admin-login';
 import { AdminHeader } from '@/components/admin/admin-header';
 import { ChatList } from '@/components/admin/chat-list';
@@ -12,6 +12,18 @@ import { toast } from 'sonner';
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
+
+  // Verifica se já está autenticado no session storage
+  useEffect(() => {
+    const checkAuth = () => {
+      const authStatus = sessionStorage.getItem('adminAuthenticated');
+      if (authStatus === 'true') {
+        setIsAuthenticated(true);
+      }
+    };
+    
+    checkAuth();
+  }, []);
 
   const handleLogin = (code: string) => {
     // In a real application, this should validate against server
