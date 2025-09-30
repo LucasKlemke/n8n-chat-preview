@@ -1,46 +1,34 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { AdminLogin } from '@/components/admin/admin-login';
 import { AdminHeader } from '@/components/admin/admin-header';
 import { ChatList } from '@/components/admin/chat-list';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 export default function AdminPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { data: session, status } = useSession();
   const router = useRouter();
-
-  // Verifica se já está autenticado no session storage
-  useEffect(() => {
-    const checkAuth = () => {
-      const authStatus = sessionStorage.getItem('adminAuthenticated');
-      if (authStatus === 'true') {
-        setIsAuthenticated(true);
-      }
-    };
-    
-    checkAuth();
-  }, []);
-
-  const handleLogin = (code: string) => {
-    // In a real application, this should validate against server
-    if (code === 'admin123') {
-      setIsAuthenticated(true);
-      toast.success('Login realizado com sucesso!');
-    } else {
-      toast.error('Código de administração inválido!');
-    }
-  };
 
   const handleCreateNewChat = () => {
     router.push('/admin/chat/new');
   };
 
-  if (!isAuthenticated) {
-    return <AdminLogin onLogin={handleLogin} />;
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-[#075e54] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return <AdminLogin />;
   }
 
   return (

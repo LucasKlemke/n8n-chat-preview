@@ -1,27 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
 
-interface AdminLoginProps {
-  onLogin: (code: string) => void;
-  isLoading?: boolean;
-}
-
-export function AdminLogin({ onLogin, isLoading = false }: AdminLoginProps) {
-  const [adminCode, setAdminCode] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Salva a autenticação no session storage
-    sessionStorage.setItem('adminAuthenticated', 'true');
-    sessionStorage.setItem('adminCode', adminCode);
-    onLogin(adminCode);
-  };
-
+export function AdminLogin() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <Card className="w-full max-w-lg">
@@ -32,30 +15,22 @@ export function AdminLogin({ onLogin, isLoading = false }: AdminLoginProps) {
           <CardTitle className="text-2xl">Painel de Administração</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="adminCode" className="text-sm font-medium">
-                Código de Administração
-              </Label>
-              <Input
-                id="adminCode"
-                type="password"
-                value={adminCode}
-                onChange={(e) => setAdminCode(e.target.value)}
-                required
-                placeholder="Digite o código"
-                className="focus-visible:ring-0 focus-visible:border-[#075e54]"
-                disabled={isLoading}
-              />
-            </div>
-            <Button 
-              type="submit" 
-              className="w-full bg-[#075e54] hover:bg-[#075e54]/90"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Verificando...' : 'Entrar'}
+          <div className="text-center space-y-4">
+            <p className="text-muted-foreground">
+              Faça login para acessar o painel de administração
+            </p>
+            <Button asChild className="w-full bg-[#075e54] hover:bg-[#075e54]/90">
+              <Link href="/login">
+                Fazer Login
+              </Link>
             </Button>
-          </form>
+            <div className="text-sm text-muted-foreground">
+              Não tem uma conta?{' '}
+              <Link href="/register" className="text-[#075e54] hover:underline">
+                Criar conta
+              </Link>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
