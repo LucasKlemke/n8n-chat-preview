@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ChatService } from '@/lib/services/chat.service';
 import { CreateChatRequest } from '@/lib/types';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 // GET - Listar todos os chats
 export async function GET() {
   try {
-    const chats = await ChatService.getAllChats();
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Não autorizado' },
+        { status: 401 }
+      );
+    }
+
+    const chats = await ChatService.getAllChats(session.user.id);
     return NextResponse.json(chats);
   } catch (error) {
     console.error('Erro ao buscar chats:', error);
@@ -19,6 +30,15 @@ export async function GET() {
 // POST - Criar um novo chat
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Não autorizado' },
+        { status: 401 }
+      );
+    }
+
     const body: CreateChatRequest = await request.json();
     
     if (!body.companyName || !body.prompt) {
@@ -28,7 +48,7 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const chat = await ChatService.createChat(body);
+    const chat = await ChatService.createChat(body, session.user.id);
     return NextResponse.json(chat, { status: 201 });
   } catch (error) {
     console.error('Erro ao criar chat:', error);

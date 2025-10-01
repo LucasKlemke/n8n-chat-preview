@@ -4,9 +4,9 @@ import { ChatService } from '@/lib/services/chat.service';
 import { CreateChatRequest, UpdateChatRequest, ApiResponse, Chat } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 
-export async function getAllChatsAction(): Promise<ApiResponse<Chat[]>> {
+export async function getAllChatsAction(userId?: string): Promise<ApiResponse<Chat[]>> {
   try {
-    const chats = await ChatService.getAllChats();
+    const chats = await ChatService.getAllChats(userId);
     return { data: chats };
   } catch (error) {
     console.error('Error in getAllChatsAction:', error);
@@ -27,9 +27,9 @@ export async function getChatByCompanyNameAction(companyName: string): Promise<A
   }
 }
 
-export async function createChatAction(data: CreateChatRequest): Promise<ApiResponse<Chat>> {
+export async function createChatAction(data: CreateChatRequest, userId: string): Promise<ApiResponse<Chat>> {
   try {
-    const chat = await ChatService.createChat(data);
+    const chat = await ChatService.createChat(data, userId);
     revalidatePath('/admin');
     return { data: chat, message: 'Chat created successfully' };
   } catch (error) {

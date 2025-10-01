@@ -13,12 +13,7 @@ export function AdminHeader() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 sm:space-x-3">
-            <Button asChild variant="ghost" size="sm" className="text-white hover:bg-white/10 text-xs sm:text-sm">
-              <Link href="/">
-                <span className="hidden sm:inline">← Voltar</span>
-                <span className="sm:hidden">←</span>
-              </Link>
-            </Button>
+
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">
               <span className="text-sm sm:text-lg font-medium text-white">
                 {session?.user?.name?.charAt(0) || 'A'}

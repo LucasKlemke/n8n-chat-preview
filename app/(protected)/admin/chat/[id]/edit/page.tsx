@@ -1,47 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { AdminLogin } from '@/components/admin/admin-login';
+import { useSession } from 'next-auth/react';
 import { AdminHeader } from '@/components/admin/admin-header';
 import { EditChatForm } from '@/components/admin/edit-chat-form';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-import { toast } from 'sonner';
 import { useChats } from '@/lib/hooks/use-chats';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function EditChatPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { data: session, status } = useSession();
   const router = useRouter();
   const params = useParams();
   const chatId = params?.id as string;
 
   const { data: chats, isLoading: chatsLoading, error: chatsError } = useChats();
   const chat = chats?.find(c => c.id === chatId);
-
-  // Verifica se já está autenticado no session storage
-  useEffect(() => {
-    const checkAuth = () => {
-      const authStatus = sessionStorage.getItem('adminAuthenticated');
-      if (authStatus === 'true') {
-        setIsAuthenticated(true);
-      }
-    };
-    
-    checkAuth();
-  }, []);
-
-  const handleLogin = (code: string) => {
-    // In a real application, this should validate against server
-    if (code === 'admin123') {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('adminAuthenticated', 'true');
-      toast.success('Login realizado com sucesso!');
-    } else {
-      toast.error('Código de administração inválido!');
-    }
-  };
 
   const handleBackToAdmin = () => {
     router.push('/admin');
@@ -51,11 +26,7 @@ export default function EditChatPage() {
     router.push('/admin');
   };
 
-  if (!isAuthenticated) {
-    return <AdminLogin onLogin={handleLogin} />;
-  }
-
-  if (chatsLoading) {
+  if (status === 'loading' || chatsLoading) {
     return (
       <div className="min-h-screen bg-background">
         <AdminHeader />
@@ -64,6 +35,25 @@ export default function EditChatPage() {
             <Loader2 className="w-8 h-8 animate-spin text-[#075e54]" />
             <span className="ml-2 text-muted-foreground">Carregando...</span>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Acesso Negado</h1>
+          <p className="text-muted-foreground mb-6">
+            Você precisa estar logado para editar chats.
+          </p>
+          <Button
+            onClick={() => router.push('/login')}
+            className="bg-[#075e54] hover:bg-[#075e54]/90"
+          >
+            Fazer Login
+          </Button>
         </div>
       </div>
     );

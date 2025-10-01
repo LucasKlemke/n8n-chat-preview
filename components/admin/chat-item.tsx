@@ -63,6 +63,11 @@ export function ChatItem({ chat }: ChatItemProps) {
                   minute: '2-digit'
                 })}
               </p>
+              {chat._count && (
+                <p className="text-xs text-muted-foreground">
+                  {chat._count.messages} mensagem{chat._count.messages !== 1 ? 's' : ''}
+                </p>
+              )}
             </div>
             <div className="flex items-center space-x-1 sm:space-x-2">
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ChatService } from '@/lib/services/chat.service';
 import { UpdateChatRequest } from '@/lib/types';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 // DELETE - Excluir um chat específico
 export async function DELETE(
@@ -8,12 +10,30 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Não autorizado' },
+        { status: 401 }
+      );
+    }
+
     const { id } = await params;
     
     if (!id) {
       return NextResponse.json(
         { error: 'ID do chat é obrigatório' },
         { status: 400 }
+      );
+    }
+
+    // Verify that the chat belongs to the authenticated user
+    const chat = await ChatService.getChatById(id);
+    if (!chat || chat.userId !== session.user.id) {
+      return NextResponse.json(
+        { error: 'Chat não encontrado ou não autorizado' },
+        { status: 404 }
       );
     }
     
@@ -42,6 +62,15 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Não autorizado' },
+        { status: 401 }
+      );
+    }
+
     const { id } = await params;
     const body: UpdateChatRequest = await request.json();
     
@@ -49,6 +78,15 @@ export async function PUT(
       return NextResponse.json(
         { error: 'ID do chat é obrigatório' },
         { status: 400 }
+      );
+    }
+
+    // Verify that the chat belongs to the authenticated user
+    const chat = await ChatService.getChatById(id);
+    if (!chat || chat.userId !== session.user.id) {
+      return NextResponse.json(
+        { error: 'Chat não encontrado ou não autorizado' },
+        { status: 404 }
       );
     }
     

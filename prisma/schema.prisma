@@ -28,8 +28,7 @@ model User {
   sessions Session[]
 
   // Relacionamentos
-  chats  Chat[]
-  agents Agent[]
+  chats Chat[]
 
   @@map("users")
 }
@@ -73,33 +72,16 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-model Agent {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  userId      String   @map("user_id")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  // Relacionamentos
-  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  chats Chat[]
-
-  @@map("agents")
-}
-
 model Chat {
   id          String   @id @default(cuid())
   companyName String   @map("company_name")
   prompt      String
   userId      String   @map("user_id")
-  agentId     String   @map("agent_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Relacionamentos
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  agent    Agent     @relation(fields: [agentId], references: [id], onDelete: Cascade)
   messages Message[]
 
   @@map("chats")

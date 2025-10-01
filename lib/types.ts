@@ -2,8 +2,17 @@ export interface Chat {
   id: string;
   companyName: string;
   prompt: string;
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
+  user?: {
+    id: string;
+    nome: string;
+    email: string;
+  };
+  _count?: {
+    messages: number;
+  };
 }
 
 export interface Message {

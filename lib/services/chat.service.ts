@@ -2,9 +2,24 @@ import { prisma } from '@/lib/prisma';
 import { Chat, CreateChatRequest, UpdateChatRequest } from '@/lib/types';
 
 export class ChatService {
-  static async getAllChats(): Promise<Chat[]> {
+  static async getAllChats(userId?: string): Promise<Chat[]> {
     try {
       const chats = await prisma.chat.findMany({
+        where: userId ? { userId } : undefined,
+        include: {
+          user: {
+            select: {
+              id: true,
+              nome: true,
+              email: true
+            }
+          },
+          _count: {
+            select: {
+              messages: true
+            }
+          }
+        },
         orderBy: {
           createdAt: 'desc'
         }
@@ -45,7 +60,7 @@ export class ChatService {
     }
   }
 
-  static async createChat(data: CreateChatRequest): Promise<Chat> {
+  static async createChat(data: CreateChatRequest, userId: string): Promise<Chat> {
     try {
       // Check if chat already exists for this company
       const existingChat = await this.getChatByCompanyName(data.companyName);
@@ -56,7 +71,8 @@ export class ChatService {
       const chat = await prisma.chat.create({
         data: {
           companyName: data.companyName,
-          prompt: data.prompt
+          prompt: data.prompt,
+          userId: userId
         }
       });
       return chat;

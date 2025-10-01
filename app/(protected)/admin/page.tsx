@@ -1,7 +1,6 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { AdminLogin } from '@/components/admin/admin-login';
 import { AdminHeader } from '@/components/admin/admin-header';
 import { ChatList } from '@/components/admin/chat-list';
 import { Button } from '@/components/ui/button';
@@ -28,7 +27,22 @@ export default function AdminPage() {
   }
 
   if (!session) {
-    return <AdminLogin />;
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Acesso Negado</h1>
+          <p className="text-muted-foreground mb-6">
+            Você precisa estar logado para acessar o painel administrativo.
+          </p>
+          <Button
+            onClick={() => router.push('/login')}
+            className="bg-[#075e54] hover:bg-[#075e54]/90"
+          >
+            Fazer Login
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -41,7 +55,10 @@ export default function AdminPage() {
               Painel Administrativo
             </h1>
             <p className="text-muted-foreground mt-1">
-              Gerencie chats e agentes da plataforma
+              Gerencie seus chats e agentes personalizados
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Logado como: {session.user?.name || session.user?.email}
             </p>
           </div>
           <Button

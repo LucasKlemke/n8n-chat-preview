@@ -1,46 +1,48 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { AdminLogin } from '@/components/admin/admin-login';
+import { useSession } from 'next-auth/react';
 import { AdminHeader } from '@/components/admin/admin-header';
 import { CreateChatForm } from '@/components/admin/create-chat-form';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 export default function NewChatPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { data: session, status } = useSession();
   const router = useRouter();
-
-  // Verifica se já está autenticado no session storage
-  useEffect(() => {
-    const checkAuth = () => {
-      const authStatus = sessionStorage.getItem('adminAuthenticated');
-      if (authStatus === 'true') {
-        setIsAuthenticated(true);
-      }
-    };
-    
-    checkAuth();
-  }, []);
-
-  const handleLogin = (code: string) => {
-    // In a real application, this should validate against server
-    if (code === 'admin123') {
-      setIsAuthenticated(true);
-      toast.success('Login realizado com sucesso!');
-    } else {
-      toast.error('Código de administração inválido!');
-    }
-  };
 
   const handleBackToAdmin = () => {
     router.push('/admin');
   };
 
-  if (!isAuthenticated) {
-    return <AdminLogin onLogin={handleLogin} />;
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-[#075e54] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Acesso Negado</h1>
+          <p className="text-muted-foreground mb-6">
+            Você precisa estar logado para criar chats.
+          </p>
+          <Button
+            onClick={() => router.push('/login')}
+            className="bg-[#075e54] hover:bg-[#075e54]/90"
+          >
+            Fazer Login
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
