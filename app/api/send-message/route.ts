@@ -10,7 +10,7 @@ import { NextRequest } from 'next/server';
 export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
-  const { messages, companyName }: { messages: UIMessage[], companyName?: string } = await req.json();
+  const { messages, companyName, userId }: { messages: UIMessage[], companyName?: string, userId?: string } = await req.json();
 
   let systemPrompt = "Você é um assistente útil e prestativo.";
   let chatId: string | null = null;
@@ -20,7 +20,8 @@ export async function POST(req: NextRequest) {
     try {
       const chat = await prisma.chat.findFirst({
         where: {
-          companyName: companyName
+          companyName: companyName,
+          ...(userId && { userId: userId }) // Filtrar por userId se fornecido
         }
       });
       

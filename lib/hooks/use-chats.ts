@@ -13,8 +13,12 @@ async function fetchChats(): Promise<Chat[]> {
   return response.json();
 }
 
-async function fetchChatByCompany(companyName: string): Promise<Chat> {
-  const response = await fetch(`/api/company/${encodeURIComponent(companyName)}`);
+async function fetchChatByCompany(companyName: string, userId?: string): Promise<Chat> {
+  const url = userId 
+    ? `/api/user/${userId}/chat/${encodeURIComponent(companyName)}`
+    : `/api/company/${encodeURIComponent(companyName)}`;
+    
+  const response = await fetch(url);
   if (!response.ok) {
     if (response.status === 404) {
       throw new Error('Chat not found');
@@ -72,10 +76,10 @@ export function useChats() {
   });
 }
 
-export function useChatByCompany(companyName: string, enabled: boolean = true) {
+export function useChatByCompany(companyName: string, userId?: string, enabled: boolean = true) {
   return useQuery({
     queryKey: queryKeys.chats.company(companyName),
-    queryFn: () => fetchChatByCompany(companyName),
+    queryFn: () => fetchChatByCompany(companyName, userId),
     enabled: enabled && !!companyName,
   });
 }

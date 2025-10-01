@@ -33,7 +33,7 @@ export function ChatItem({ chat }: ChatItemProps) {
   };
 
   const copyLink = () => {
-    const link = `${window.location.origin}/${encodeURIComponent(chat.companyName)}`;
+    const link = `${window.location.origin}/user/${chat.userId}/chat/${encodeURIComponent(chat.companyName)}`;
     navigator.clipboard.writeText(link);
     toast.success('Link copiado para a área de transferência!');
   };

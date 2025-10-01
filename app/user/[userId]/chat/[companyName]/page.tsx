@@ -11,11 +11,12 @@ import { ChatInput } from '@/components/chat/chat-input';
 import { TypingIndicator } from '@/components/chat/typing-indicator';
 import { ChatNotFound } from '@/components/chat/chat-not-found';
 
-export default function Chat() {
+export default function UserChatPage() {
   const params = useParams();
+  const userId = params.userId as string;
   const companyName = decodeURIComponent(params.companyName as string);
 
-  const { data: chatInfo, isLoading, error } = useChatByCompany(companyName);
+  const { data: chatInfo, isLoading, error } = useChatByCompany(companyName, userId);
 
   const [messages, setMessages] = useState<UIMessage[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,6 +31,20 @@ export default function Chat() {
 
   if (error || !chatInfo) {
     return <ChatNotFound companyName={companyName} />;
+  }
+
+  // Verify that the chat belongs to the requested user
+  if (chatInfo.userId !== userId) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Acesso Negado</h1>
+          <p className="text-muted-foreground mb-6">
+            Este chat não pertence ao usuário solicitado.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   const handleSendMessage = async (text: string) => {
@@ -55,7 +70,8 @@ export default function Chat() {
         },
         body: JSON.stringify({
           messages: newMessages,
-          companyName: companyName
+          companyName: companyName,
+          userId: userId
         })
       });
       
