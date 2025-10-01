@@ -182,12 +182,44 @@ Lembre-se: O segredo está na naturalidade da conversa. Adapte-se a cada situaç
 `
 
 export async function POST(req: NextRequest) {
-  const { content }: { content: string } = await req.json();
+  const { content, currentPrompt, isImprovement }: { 
+    content: string; 
+    currentPrompt?: string; 
+    isImprovement?: boolean; 
+  } = await req.json();
+
+  let promptToUse = content;
+  let systemPromptToUse = systemPrompt;
+
+  // Se for uma melhoria de prompt existente
+  if (isImprovement && currentPrompt) {
+    systemPromptToUse = `
+Com base no prompt atual e nas informações adicionais fornecidas, melhore o prompt existente mantendo sua estrutura e personalidade, mas incorporando as novas informações de forma natural e coerente.
+
+PROMPT ATUAL:
+${currentPrompt}
+
+INFORMAÇÕES ADICIONAIS PARA INCORPORAR:
+${content}
+
+INSTRUÇÕES:
+1. Mantenha a estrutura e tom do prompt atual
+2. Incorpore as novas informações de forma natural
+3. Melhore a clareza e completude do prompt
+4. Mantenha a personalidade e estilo de comunicação
+5. Não remova informações importantes do prompt atual
+6. Adicione apenas informações relevantes e úteis
+
+Retorne apenas o prompt melhorado, sem explicações adicionais.
+`;
+
+    promptToUse = `Melhore o prompt atual incorporando as informações adicionais fornecidas.`;
+  }
 
   const {text} = await generateText({
     model: openai('gpt-4o'),
-    system: systemPrompt,
-    prompt: content,
+    system: systemPromptToUse,
+    prompt: promptToUse,
   });
 
   console.log(text);

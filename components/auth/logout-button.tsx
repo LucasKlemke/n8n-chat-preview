@@ -10,9 +10,8 @@ export function LogoutButton() {
   };
 
   return (
-    <Button variant="outline" onClick={handleLogout} className="flex items-center gap-2">
-      <LogOut className="h-4 w-4" />
-      Sair
+    <Button variant="outline" size={'icon'} onClick={handleLogout} className="rounded-full">
+      <LogOut className="size-4" />
     </Button>
   );
 }

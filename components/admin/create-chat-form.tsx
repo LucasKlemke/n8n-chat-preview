@@ -25,7 +25,11 @@ export function CreateChatForm() {
 
   const generatePrompt = async () => {
     if (!businessInfo.trim()) {
-      toast.error('Por favor, insira informações sobre o negócio da empresa');
+      // Se não há informações do negócio, vai direto para o step 2 com prompt vazio
+      setGeneratedPrompt('');
+      setFormData({ ...formData, prompt: '' });
+      setStep(2);
+      toast.success('Prosseguindo para criação do prompt manual');
       return;
     }
 
@@ -105,37 +109,49 @@ export function CreateChatForm() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="businessInfo" className="text-sm font-medium">
-                Informações sobre o Negócio
+                Informações sobre o Negócio (Opcional)
               </Label>
               <Textarea
                 id="businessInfo"
                 value={businessInfo}
                 onChange={(e) => setBusinessInfo(e.target.value)}
-                required
                 className="h-96 focus-visible:ring-0 focus-visible:border-[#075e54]"
-                placeholder="Descreva tudo sobre o negócio da empresa: produtos, serviços, valores, missão, público-alvo, diferenciais, etc..."
+                placeholder="Descreva tudo sobre o negócio da empresa: produtos, serviços, valores, missão, público-alvo, diferenciais, etc... (Deixe em branco se quiser criar o prompt manualmente)"
                 disabled={isGeneratingPrompt}
               />
             </div>
-            <Button
-              onClick={generatePrompt}
-              disabled={isGeneratingPrompt || !formData.companyName.trim() || !businessInfo.trim()}
-              className="w-full sm:w-auto bg-[#075e54] hover:bg-[#075e54]/90 h-10 sm:h-11"
-            >
-              {isGeneratingPrompt ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  <span className="hidden sm:inline">Gerando Prompt...</span>
-                  <span className="sm:hidden">Gerando...</span>
-                </>
-              ) : (
-                <>
-                  <ArrowRight className="w-4 h-4 mr-2" />
-                  <span className="hidden sm:inline">Gerar Prompt</span>
-                  <span className="sm:hidden">Gerar</span>
-                </>
-              )}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                onClick={generatePrompt}
+                disabled={isGeneratingPrompt || !formData.companyName.trim()}
+                className="flex-1 sm:flex-none bg-[#075e54] hover:bg-[#075e54]/90 h-10 sm:h-11"
+              >
+                {isGeneratingPrompt ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <span className="hidden sm:inline">Gerando Prompt...</span>
+                    <span className="sm:hidden">Gerando...</span>
+                  </>
+                ) : (
+                  <>
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    <span className="hidden sm:inline">Gerar Prompt</span>
+                    <span className="sm:hidden">Gerar</span>
+                  </>
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setStep(2)}
+                disabled={isGeneratingPrompt || !formData.companyName.trim()}
+                className="flex-1 sm:flex-none h-10 sm:h-11"
+              >
+                <ArrowRight className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">Pular para Prompt</span>
+                <span className="sm:hidden">Pular</span>
+              </Button>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">

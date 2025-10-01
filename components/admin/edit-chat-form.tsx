@@ -49,21 +49,25 @@ export function EditChatForm({ chat, onSuccess }: EditChatFormProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: businessInfo }),
+        body: JSON.stringify({ 
+          content: businessInfo,
+          currentPrompt: formData.prompt,
+          isImprovement: true
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao gerar prompt');
+        throw new Error('Erro ao melhorar prompt');
       }
 
       const data = await response.json();
       setGeneratedPrompt(data.data.content);
       setFormData({ ...formData, prompt: data.data.content });
       setStep(2);
-      toast.success('Prompt gerado com sucesso!');
+      toast.success('Prompt melhorado com sucesso!');
     } catch (error) {
-      console.error('Error generating prompt:', error);
-      toast.error('Erro ao gerar prompt. Tente novamente.');
+      console.error('Error improving prompt:', error);
+      toast.error('Erro ao melhorar prompt. Tente novamente.');
     } finally {
       setIsGeneratingPrompt(false);
     }
@@ -96,7 +100,7 @@ export function EditChatForm({ chat, onSuccess }: EditChatFormProps) {
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base sm:text-lg">
-            {step === 1 ? 'Informações da Empresa' : 'Revisar Prompt'}
+            {step === 1 ? 'Editar Chat' : 'Revisar Prompt'}
           </CardTitle>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Passo {step} de 2</span>
@@ -122,14 +126,14 @@ export function EditChatForm({ chat, onSuccess }: EditChatFormProps) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="businessInfo" className="text-sm font-medium">
-                Informações sobre o Negócio (Opcional - para regenerar prompt)
+                Informações Adicionais para Melhorar o Prompt (Opcional)
               </Label>
               <Textarea
                 id="businessInfo"
                 value={businessInfo}
                 onChange={(e) => setBusinessInfo(e.target.value)}
                 className="h-32 focus-visible:ring-0 focus-visible:border-[#075e54]"
-                placeholder="Descreva informações adicionais sobre o negócio da empresa para regenerar o prompt..."
+                placeholder="Descreva informações adicionais sobre o negócio da empresa para melhorar o prompt atual..."
                 disabled={isGeneratingPrompt}
               />
             </div>
@@ -157,14 +161,14 @@ export function EditChatForm({ chat, onSuccess }: EditChatFormProps) {
                 {isGeneratingPrompt ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    <span className="hidden sm:inline">Gerando Prompt...</span>
-                    <span className="sm:hidden">Gerando...</span>
+                    <span className="hidden sm:inline">Melhorando Prompt...</span>
+                    <span className="sm:hidden">Melhorando...</span>
                   </>
                 ) : (
                   <>
                     <ArrowRight className="w-4 h-4 mr-2" />
-                    <span className="hidden sm:inline">Regenerar Prompt</span>
-                    <span className="sm:hidden">Regenerar</span>
+                    <span className="hidden sm:inline">Melhorar Prompt</span>
+                    <span className="sm:hidden">Melhorar</span>
                   </>
                 )}
               </Button>

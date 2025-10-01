@@ -48,17 +48,14 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-background">
       <AdminHeader />
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6 lg:space-y-8">
-        <div className="flex justify-between items-center">
+      <div className="p-10">
+        <div className="flex justify-between items-center mb-5">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
               Painel Administrativo
             </h1>
             <p className="text-muted-foreground mt-1">
               Gerencie seus chats e agentes personalizados
-            </p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Logado como: {session.user?.name || session.user?.email}
             </p>
           </div>
           <Button

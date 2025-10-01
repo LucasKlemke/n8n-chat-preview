@@ -10,7 +10,7 @@ export function AdminHeader() {
 
   return (
     <div className="bg-[#075e54] px-3 sm:px-4 py-3 shadow-md">
-      <div className="max-w-7xl mx-auto">
+      <div className=" mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 sm:space-x-3">
 

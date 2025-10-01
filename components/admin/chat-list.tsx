@@ -8,6 +8,8 @@ import { ChatItem } from './chat-item';
 export function ChatList() {
   const { data: chats, isLoading, error } = useChats();
 
+  
+
   if (error) {
     return (
       <Card>
@@ -32,11 +34,10 @@ export function ChatList() {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-4">
-        <CardTitle className="text-base sm:text-lg">Chats Existentes</CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">
+    <div>
+      <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">Chats Existentes</h1>
+      <div className="pt-0">
+
         {isLoading ? (
           <div className="flex items-center justify-center py-8 sm:py-12">
             <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin text-[#075e54]" />
@@ -58,13 +59,15 @@ export function ChatList() {
             </p>
           </div>
         ) : (
-          <div className="space-y-3 sm:space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {chats.map((chat) => (
               <ChatItem key={chat.id} chat={chat} />
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
+
+

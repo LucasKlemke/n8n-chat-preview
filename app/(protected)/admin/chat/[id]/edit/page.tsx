@@ -109,16 +109,15 @@ export default function EditChatPage() {
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
               onClick={handleBackToAdmin}
-              className="flex items-center gap-2"
+              className="rounded-full"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Voltar ao Admin
+              <ArrowLeft className="size-4" />
             </Button>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-                Editar Chat/Agente
+                Editar Chat
               </h1>
               <p className="text-muted-foreground mt-1">
                 Edite as configurações do chat da empresa: {chat.companyName}
