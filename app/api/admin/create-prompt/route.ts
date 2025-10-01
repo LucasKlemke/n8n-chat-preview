@@ -1,4 +1,5 @@
 import { openai } from '@ai-sdk/openai';
+import { anthropic } from '@ai-sdk/anthropic';
 import {
   generateText,
 } from 'ai';
@@ -188,6 +189,9 @@ export async function POST(req: NextRequest) {
     isImprovement?: boolean; 
   } = await req.json();
 
+  const claudeModel = anthropic('claude-sonnet-4-5-20250929');
+  const openaiModel = openai('gpt-4o-mini');
+
   let promptToUse = content;
   let systemPromptToUse = systemPrompt;
 
@@ -216,13 +220,34 @@ Retorne apenas o prompt melhorado, sem explicações adicionais.
     promptToUse = `Melhore o prompt atual incorporando as informações adicionais fornecidas.`;
   }
 
-  const {text} = await generateText({
-    model: openai('gpt-4o'),
-    system: systemPromptToUse,
-    prompt: promptToUse,
-  });
-
-  console.log(text);
+  let text: string;
+  
+  try { 
+    // Tenta primeiro com Claude
+    const result = await generateText({
+      model: claudeModel,
+      system: systemPromptToUse,
+      prompt: promptToUse,
+    });
+    text = result.text;
+  } catch (claudeError) {
+    console.error('Claude model failed, trying OpenAI:', claudeError);
+    
+    try {
+      // Fallback para OpenAI
+      const result = await generateText({
+        model: openaiModel,
+        system: systemPromptToUse,
+        prompt: promptToUse,
+      });
+      text = result.text;
+    } catch (openaiError) {
+      console.error('Both models failed:', openaiError);
+      return Response.json({
+        error: 'Erro ao gerar prompt. Tente novamente.'
+      }, { status: 500 });
+    }
+  }
 
   return Response.json({
     data: {
