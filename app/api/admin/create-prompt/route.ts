@@ -5,8 +5,6 @@ import {
 } from 'ai';
 import { NextRequest } from 'next/server';
 
-export const maxDuration = 30;
-
 const systemPrompt = `
 Com base nas informações enviadas pelo usuário, gere um prompt seguindo o modelo abaixo:
 
